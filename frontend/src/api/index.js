@@ -14,12 +14,14 @@ import { ElMessage } from 'element-plus'
 
 // 创建 Axios 实例
 // 开发环境：使用相对路径 /api，由 Vite 代理转发到 localhost:8080
-// 生产环境：使用环境变量 VITE_API_BASE_URL 指向 Render 后端
+// 生产环境：使用环境变量 VITE_API_BASE_URL 指向 ngrok/Render 后端
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || '/api',
   timeout: 10000,            // 请求超时时间 10 秒
   headers: {
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
+    // ngrok 免费版会显示拦截页，这个头可以跳过
+    'ngrok-skip-browser-warning': 'true'
   }
 })
 
