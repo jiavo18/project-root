@@ -5,7 +5,8 @@
 # ============================================================
 
 server:
-  port: 8080
+  # Render 会通过 PORT 环境变量覆盖此值，本地开发默认 8080
+  port: ${PORT:8080}
 
 spring:
   application:
@@ -48,6 +49,13 @@ spring:
 jwt:
   secret: YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXoxMjM0NTY3ODkwYWJjZGVmZ2hpamtsbW5vcA==
   expiration: 86400000  # Token 有效期：24 小时 (单位：毫秒)
+
+# ============================================================
+# CORS 额外源（部署时通过环境变量设置）
+# 格式：逗号分隔的 URL，例如 https://xxx.vercel.app
+# ============================================================
+cors:
+  extra-origins: ${CORS_ORIGINS:}
 
 # ============================================================
 # 日志级别

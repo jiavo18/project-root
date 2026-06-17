@@ -14,6 +14,10 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import org.springframework.beans.factory.annotation.Value;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -25,6 +29,13 @@ import java.util.List;
 public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
+
+    /**
+     * 额外的 CORS 允许源，从环境变量读取（逗号分隔）
+     * 部署时设置 CORS_ORIGINS 环境变量即可添加 Vercel 域名
+     */
+    @Value("${cors.extra-origins:}")
+    private String extraOrigins;
 
     public SecurityConfig(JwtFilter jwtFilter) {
         this.jwtFilter = jwtFilter;
@@ -83,8 +94,25 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        // 允许的前端源地址
-        configuration.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:3000"));
+
+        // 允许的前端源地址（本地开发 + 从环境变量读取的生产地址）
+        List<String> allowedOrigins = new ArrayList<>(List.of(
+                "http://localhost:5173",
+                "http://localhost:3000",
+                "http://localhost:8080"
+        ));
+
+        // 从环境变量追加额外源（如 Vercel 部署地址）
+        if (extraOrigins != null && !extraOrigins.isBlank()) {
+            allowedOrigins.addAll(
+                Arrays.stream(extraOrigins.split(","))
+                    .map(String::trim)
+                    .filter(s -> !s.isEmpty())
+                    .toList()
+            );
+        }
+
+        configuration.setAllowedOrigins(allowedOrigins);
         // 允许的 HTTP 方法
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         // 允许的请求头
