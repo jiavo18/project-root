@@ -55,7 +55,7 @@ jwt:
 # 格式：逗号分隔的 URL，例如 https://xxx.vercel.app
 # ============================================================
 cors:
-  extra-origins: ${CORS_ORIGINS:}
+  extra-origins: ${CORS_ORIGINS:https://project-root-murex.vercel.app}
 
 # ============================================================
 # 日志级别
