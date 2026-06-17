@@ -1,0 +1,58 @@
+# ============================================================
+# 应用配置 — 用户管理系统 Demo
+# 默认使用 H2 内存数据库，方便快速演示
+# 如需切换到 MySQL，请将 spring.datasource 相关配置取消注释
+# ============================================================
+
+server:
+  port: 8080
+
+spring:
+  application:
+    name: user-management-system
+
+  # ---------- H2 内存数据库配置 (默认) ----------
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  # H2 Web 控制台 (开发时可通过 http://localhost:8080/h2-console 访问)
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  # ---------- MySQL 配置 (需要时取消注释，并注释掉上面的 H2 配置) ----------
+  # datasource:
+  #   url: jdbc:mysql://localhost:3306/user_management?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+  #   driver-class-name: com.mysql.cj.jdbc.Driver
+  #   username: root
+  #   password: your_password
+
+  # JPA 配置：自动建表 / 更新表结构
+  jpa:
+    hibernate:
+      ddl-auto: update   # 开发阶段用 update，生产环境建议改为 validate
+    show-sql: true       # 控制台打印 SQL，方便调试
+    properties:
+      hibernate:
+        format_sql: true
+    # 使用 H2 时不需要特殊配置；使用 MySQL 时取消注释下面这行
+    # database-platform: org.hibernate.dialect.MySQLDialect
+
+# ============================================================
+# JWT 配置
+# ============================================================
+jwt:
+  secret: YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXoxMjM0NTY3ODkwYWJjZGVmZ2hpamtsbW5vcA==
+  expiration: 86400000  # Token 有效期：24 小时 (单位：毫秒)
+
+# ============================================================
+# 日志级别
+# ============================================================
+logging:
+  level:
+    com.example.demo: DEBUG
+    org.springframework.security: DEBUG
